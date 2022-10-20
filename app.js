@@ -6,18 +6,26 @@ const currentDate = new Date()
 const defaultYear = currentDate.getFullYear()
 const defaultMonth = currentDate.getMonth() + 1
 
+var tokens = []
+
 try {
-  const data = fs.readFileSync('./tokens.txt', 'utf8');
-  const array = data.split(",")
-  console.log(array[1]);
+    const data = fs.readFileSync('./tokens.txt', 'utf8');
+    tokens = data.split(",")
 } catch (err) {
-  console.error(err);
+    console.error(err);
 }
 
+var monoToken = ""
+var monoToken2 = ""
 
-const monoToken = prompt('Enter your monobank API token: ');
-
-const monoToken2 = prompt('Enter your 2nd monobank API token: ');
+if (tokens.length == 0) {
+    monoToken = prompt('Enter your monobank API token: ');
+    monoToken2 = prompt('Enter your 2nd monobank API token: ');
+}
+else {
+    monoToken = tokens[0]
+    monoToken2 = tokens[1]
+}
 
 const startDate = prompt('Enter start date in MM-DD-YYYY: ', `${defaultMonth}-1-${defaultYear}`);
 var fromDate = new Date(startDate);
@@ -108,7 +116,7 @@ request({
 
         const result = []
 
-         console.log(response.body)
+        console.log(response.body)
         response.body.forEach(transaction => {
             const date = (new Date(transaction['time'] * 1000).toLocaleDateString("en-US"));
             const amount = transaction['amount'] / 100
