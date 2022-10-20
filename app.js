@@ -39,22 +39,8 @@ const to = toDate.getTime() / 1000
 
 const accountInfo = 'https://api.monobank.ua/personal/client-info'
 
+
 /* request({
-    url: accountInfo, json: true, headers: {
-        'X-Token': monoToken
-    }
-}, (error, response) => {
-    if (error) {
-        console.log('Unable to connect to location service!')
-    }
-    else {
-        console.log(response.body)
-    }
-}) */
-
-
-
-request({
     url: "https://api.monobank.ua/bank/currency", json: true
 }, (error, response) => {
     if (error) {
@@ -63,7 +49,7 @@ request({
     else {
         console.log(response.body)
     }
-})
+}) */
 
 
 const url = 'https://api.monobank.ua/personal/statement/0/' + from + '/' + to
@@ -84,17 +70,21 @@ const secondRequest = (dataFromFirst) => {
 
             // console.log(response.body)
             response.body.forEach(transaction => {
-                const date = (new Date(transaction['time'] * 1000).toLocaleDateString("en-US"));
+                const date = (new Date(transaction['time'] * 1000));
                 const amount = transaction['amount'] / 100
                 const description = transaction['description']
-                dataFromFirst.push({ date, amount, description, author: "АСЯ" })
+                const mcc = transaction['originalMcc']
+                dataFromFirst.push({ date, amount, description, mcc, author: "АСЯ" })
             })
+
+
+            dataFromFirst.sort((a, b) => a['date'] - b['date']);
 
             var csv = "";
 
             dataFromFirst.forEach(transaction => {
-                console.log(`${transaction.date}, ${transaction.description}, ${transaction.amount}, ${transaction.author}`);
-                csv += (`${transaction.date}, ${transaction.description}, ${transaction.amount}, ${transaction.author}` + "\r\n");
+                console.log(`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mcc}, ${transaction.author}`);
+                csv += (`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mcc}, ${transaction.author}` + "\r\n");
             })
 
             const fs = require("fs");
@@ -118,11 +108,12 @@ request({
 
         console.log(response.body)
         response.body.forEach(transaction => {
-            const date = (new Date(transaction['time'] * 1000).toLocaleDateString("en-US"));
+
+            const date = (new Date(transaction['time'] * 1000));
             const amount = transaction['amount'] / 100
             const description = transaction['description']
-            // console.log(`${date} ${description} ${amount}`); 
-            result.push({ date, amount, description, author: "КОЛЯ" })
+            const mcc = transaction['originalMcc']
+            result.push({ date, amount, description, mcc, author: "КОЛЯ" })
         })
 
         secondRequest(result)
@@ -130,41 +121,3 @@ request({
 })
 
 
-/*
-v1. 
-[x] - scan input via terminal
-[x] receive info from mono
-[x] make the default start date the start of the current month
-[x] make the default end date the end of the current month
-[x] get - description, amount and date
-[x] add the project to git with proper .gitignore
-[x] do a second transaction for Asya's account and 
-[ ] read tokens from a file in case they're not provided via the prompt
-[ ] print that info into csv file 
-[ ] print info regarding euro account as well
-*/
-
-/*
-
-[ ] print the total sum at the end
-
-[ ] merge the two lists together based on date and label each transaction from where it comes (i.e. which acccount)
-[ ] remove all commas from a descripton of the transaction
-v1a
-receive input from ZenMoney as well
-
-*/
-
-
-/*
-v2. 
-deploy the app to server
-get the input via an html page
-
-*/
-
-/*
-
-everything as in v2 but either - forward the output directly to google sheets
-or implement the table myself 
-*/

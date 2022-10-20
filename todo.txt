@@ -1,0 +1,29 @@
+v1. 
+[x] - scan input via terminal
+[x] receive info from mono
+[x] make the default start date the start of the current month
+[x] make the default end date the end of the current month
+[x] get - description, amount and date
+[x] add the project to git with proper .gitignore
+[x] do a second transaction for Asya's account and 
+[x] read tokens from a file in case they're not provided via the prompt
+[x] intermix the responses from both of the requests based on the date
+[ ] create all potential categories and split the MCC codes into these potential categories
+[ ] print that info into csv file 
+[ ] print info regarding euro account as well
+[ ] print the total sum at the end
+[ ] merge the two lists together based on date and label each transaction from where it comes (i.e. which acccount)
+[ ] remove all commas from a descripton of the transaction
+
+v1a
+receive input from ZenMoney as well
+
+v2
+deploy the app to server
+get the input via an html page
+
+
+v3
+everything as in v2 but either - forward the output directly to google sheets
+or implement the table myself 
+
