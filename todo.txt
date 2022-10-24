@@ -8,15 +8,19 @@ v1.
 [x] do a second transaction for Asya's account and 
 [x] read tokens from a file in case they're not provided via the prompt
 [x] intermix the responses from both of the requests based on the date
-[ ] create all potential categories and split the MCC codes into these potential categories
-[ ] print that info into csv file 
-[ ] print info regarding euro account as well
+[x] create all potential categories and split the MCC codes into these potential categories
+[x] print that info into csv file 
+[x] print info for Asia's and mine uah accounts and my euro account as well
+[x] convert uah transaction into euro based on their cross course for that day
+[ ] sort the mcc codes into sub categories that we defined 
 [ ] print the total sum at the end
+[ ] print total sum for each of the categories in the end
 [ ] merge the two lists together based on date and label each transaction from where it comes (i.e. which acccount)
 [ ] remove all commas from a descripton of the transaction
 
 v1a
 receive input from ZenMoney as well
+[] get the cross course for each specific day isntead of the cross course for current day
 
 v2
 deploy the app to server
