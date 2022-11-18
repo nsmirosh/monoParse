@@ -12,14 +12,18 @@ v1.
 [x] print that info into csv file 
 [x] print info for Asia's and mine uah accounts and my euro account as well
 [x] convert uah transaction into euro based on their cross course for that day
-[ ] sort the mcc codes into sub categories that we defined 
-[ ] print the total sum at the end
-[ ] print total sum for each of the categories in the end
-[ ] merge the two lists together based on date and label each transaction from where it comes (i.e. which acccount)
-[ ] remove all commas from a descripton of the transaction
+[x] display the mcc codes
+[x] sort the mcc codes into sub categories that we defined 
+[x] print the total sum at the end
+[x] print total sum for each of the categories in the end // https://stackoverflow.com/questions/46161645/how-to-split-array-to-sub-arrays-with-similar-values
+[x] merge the two lists together based on date and label each transaction from where it comes (i.e. which acccount)
+[x] remove all commas from a descripton of the transaction
 
 v1a
-receive input from ZenMoney as well
+[] print time besides the date in the date description
+[] add time for start date
+[] in case the description includes certain keywords - put it in a specific category as well - for example, if the 
+[]receive input from ZenMoney as well
 [] get the cross course for each specific day isntead of the cross course for current day
 
 v2

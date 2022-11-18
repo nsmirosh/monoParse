@@ -3,6 +3,7 @@ const prompt = require('prompt-sync')();
 const transactionUtils = require('./transaction_utils')
 const fs = require('fs');
 
+
 const mccCodesMap = transactionUtils.mccCodesMap
 const currentDate = new Date()
 const defaultYear = currentDate.getFullYear()
@@ -38,37 +39,6 @@ var toDate = new Date(endDate);
 const from = fromDate.getTime() / 1000
 const to = toDate.getTime() / 1000
 
-
-const accountInfo = 'https://api.monobank.ua/personal/client-info'
-
-/* const euroCurrencyCode = 978
-const usdCurrencyCode = 840
-const uahCurrencyCode = 980
-
-var euroRate = 0
-var usdRate = 0
-
-request({
-    url: "https://api.monobank.ua/bank/currency", json: true
-}, (error, response) => {
-    if (error) {
-        console.log('Unable to connect to location service!')
-    }
-    else {
-
-        const result = response.body.find((currencyItem) =>
-            currencyItem['currencyCodeA'] == euroCurrencyCode)
-
-        const usdResult = response.body.find((currencyItem) =>
-            currencyItem['currencyCodeA'] == usdCurrencyCode)
-
-        euroRate = result['rateBuy']
-        console.log(usdResult)
-        usdRate = usdResult['rateBuy']
-        console.log(euroRate)
-    }
-}) */
-
 const asiaAccount = 'https://api.monobank.ua/personal/statement/0/' + from + '/' + to
 
 const myAccount = 'https://api.monobank.ua/personal/statement/0/' + from + '/' + to
@@ -90,8 +60,10 @@ const thirdRequest = (dataFromSecond) => {
                 const date = (new Date(transaction['time'] * 1000));
                 const amount = transaction['amount'] / 100
                 const description = transaction['description'].replaceAll(',', '/')
-                const mcc = mccCodesMap.get(transaction['originalMcc'].toString()).replaceAll(',', '/')
-                dataFromSecond.push({ date, amount, description, mcc, author: "КОЛЯ" })
+
+                const mccCode = transaction['originalMcc']
+                const mccCategory = mccCodesMap.get(mccCode.toString()).replaceAll(',', '/')
+                dataFromSecond.push({ date, amount, description, mccCode, mccCategory, myCategory: transactionUtils.getMyCategory(mccCode), author: "КОЛЯ" })
             })
 
             dataFromSecond.sort((a, b) => a['date'] - b['date']);
@@ -99,10 +71,35 @@ const thirdRequest = (dataFromSecond) => {
             var csv = "";
 
             dataFromSecond.forEach(transaction => {
-                console.log(`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mcc}, ${transaction.author}`);
-                csv += (`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mcc}, ${transaction.author}` + "\r\n");
+                console.log(`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mccCode}, ${transaction.mccCategory}, ${transaction.myCategory}, ${transaction.author}`);
+                csv += (`${transaction.date.toLocaleDateString("en-US")}, ${transaction.description}, ${transaction.amount}, ${transaction.mccCode}, ${transaction.mccCategory}, ${transaction.myCategory}, ${transaction.author}` + "\r\n");
             })
 
+
+            csv += "\n"
+
+            csv += (`category, sum ` + "\r\n")
+
+
+            const splitArrays = {};
+
+            dataFromSecond.forEach(v => {
+                if (splitArrays[v.myCategory]) {
+                    splitArrays[v.myCategory].push(v);
+                } else {
+                    splitArrays[v.myCategory] = [v];
+                }
+            })
+
+            for (const [key, value] of Object.entries(splitArrays)) {
+
+                const sum = value.reduce((n, { amount }) => n + amount, 0)
+
+                console.log(`category ${key} with sum = ${sum}`);
+
+                csv += (`${key}, ${sum}`  + "\r\n")
+            }
+            
             fs.writeFileSync("transactions.csv", csv);
             console.log("Done!");
         }
@@ -120,28 +117,14 @@ const secondRequest = (dataFromFirst) => {
             console.log('Unable to connect to location service!')
         }
         else {
-
-            /* console.log(response.body)
-
-            response.body.forEach(transaction => {
-                const date = (new Date(transaction['time'] * 1000));
-                var amount =  transaction['operationAmount'] / 100 
-                const description = transaction['description'].replaceAll(',', '/')
-                const mcc = mccCodesMap.get(transaction['originalMcc'].toString()).replaceAll(',', '/')
-
-                if(transaction['currencyCode'] == uahCurrencyCode) {
-                    amount = (transaction['amount'] / euroRate) / 100
-                }
-                else if (transaction['currencyCode'] == usdCurrencyCode) {
-                    amount = ((transaction['operationAmount'] * usdRate) / euroRate) / 100
-                }
-                dataFromFirst.push({ date, amount, description, mcc, author: "АСЯ" })
-            }) */
-
-
             const parsedTransactions = transactionUtils.parseTransactions(dataFromFirst, response.body, "АСЯ")
 
-            thirdRequest(parsedTransactions)
+            parsedTransactions.then((value) => {
+                thirdRequest(value)
+            }
+            ).catch((error) => {
+                console.log(`error = ${error}`);
+            })
         }
     })
 }
@@ -155,28 +138,14 @@ request({
         console.log('Unable to connect to location service!')
     }
     else {
-
-        /* const result = []
-
-        response.body.forEach(transaction => {
-
-            const date = (new Date(transaction['time'] * 1000));
-            var amount =  transaction['operationAmount'] / 100 
-            const description = transaction['description'].replaceAll(',', '/')
-            const mcc = mccCodesMap.get(transaction['originalMcc'].toString()).replaceAll(',', '/')
-
-            if(transaction['currencyCode'] == uahCurrencyCode) {
-                amount = (transaction['amount'] / euroRate) / 100
-            }
-            else if (transaction['currencyCode'] == usdCurrencyCode) {
-                amount = ((transaction['operationAmount'] * usdRate) / euroRate) / 100
-            }
-            result.push({ date, amount, description, mcc, author: "КОЛЯ" })
-        }) */
-
         const parsedTransactions = transactionUtils.parseTransactions([], response.body, "КОЛЯ")
 
-        secondRequest(parsedTransactions)
+        parsedTransactions.then((value) => {
+            secondRequest(value)
+        }
+        ).catch((error) => {
+            console.log(`error = ${error}`);
+        })
     }
 })
 
