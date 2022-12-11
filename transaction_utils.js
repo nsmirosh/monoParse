@@ -59,6 +59,8 @@ const getMyCategory = (code, description) => {
         case 5815: //"Digital Goods: Media, Books, Movies, Music"
         case 5734: //Computer Software Stores
         case 4899: //Cable/ Satellite/ and Other Pay Television and Radio
+        case 7372: //Computer Programming
+        case 5968: //Direct Marketing - Subscription
             return subscriptions
         case 7999: //Miscellaneous Recreation Services
             return entertainment

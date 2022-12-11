@@ -8,6 +8,7 @@ const mccCodesMap = transactionUtils.mccCodesMap
 const currentDate = new Date()
 const defaultYear = currentDate.getFullYear()
 const defaultMonth = currentDate.getMonth() + 1
+const defaultStartTime = "00:00:01"
 
 var tokens = []
 
@@ -30,10 +31,10 @@ else {
     monoToken2 = tokens[1]
 }
 
-const startDate = prompt('Enter start date in MM-DD-YYYY: ', `${defaultMonth}-1-${defaultYear}`);
+const startDate = prompt('Enter start date in MM-DD-YYYY HH:MM:SS: ', `${defaultMonth}-1-${defaultYear} ${defaultStartTime}`);
 var fromDate = new Date(startDate);
 
-const endDate = prompt('Enter end date in MM-DD-YYYY: ', `${defaultMonth}-${currentDate.getDate() + 1}-${defaultYear}`);
+const endDate = prompt('Enter end date in MM-DD-YYYY HH:MM:SS: ', `${defaultMonth}-${currentDate.getDate() + 1}-${defaultYear}`);
 var toDate = new Date(endDate);
 
 const from = fromDate.getTime() / 1000
@@ -44,6 +45,17 @@ const asiaAccount = 'https://api.monobank.ua/personal/statement/0/' + from + '/'
 const myAccount = 'https://api.monobank.ua/personal/statement/0/' + from + '/' + to
 
 const myEuroAccount = 'https://api.monobank.ua/personal/statement/CNgV5hCPO4uYoSgg6KUGEw/' + from + '/' + to
+
+
+
+const getDateTime = (currentdate) => {
+    return currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+}
 
 
 const thirdRequest = (dataFromSecond) => {
