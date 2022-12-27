@@ -49,6 +49,7 @@ const getMyCategory = (code, description) => {
             return travel
         case 5621: //Women’s Ready-To-Wear Stores
         case 5941: //Sporting Goods Stores
+        case 5651: //Family Clothing stores
             return clothes
         case 7523: //Parking Lots/ Garages
         case 4121: //Taxicabs/Limousines

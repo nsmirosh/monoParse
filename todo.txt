@@ -20,15 +20,19 @@ v1.
 [x] remove all commas from a descripton of the transaction
 
 v1a
-[] print time besides the date in the date description
-[] add time for start date
+[x] print time besides the date in the date description
+[x] add time for start date
 [] in case the description includes certain keywords - put it in a specific category as well - for example, if the 
 []receive input from ZenMoney as well
 [] get the cross course for each specific day isntead of the cross course for current day
 
+
 v2
 deploy the app to server
 get the input via an html page
+[] later on when a transaction happens and it enters the transaction list - in case the category is unparsed
+- notify 
+
 
 
 v3
